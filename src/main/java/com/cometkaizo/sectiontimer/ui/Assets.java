@@ -19,53 +19,13 @@ public class Assets {
 
     /// Returns the texture at the given path in the assets folder
     public static Image texture(String path) {
-        return TEXTURES.computeIfAbsent("/assets/" + path + ".png", p -> {
+        return TEXTURES.computeIfAbsent("/assets/texture/" + path + ".png", p -> {
             var image = ImageUtils.readImageOrNull(p);
             if (image == null) {
                 Main.err("no texture at " + p);
-                return ImageUtils.readImage("/assets/unknown.png");
+                return ImageUtils.readImage("/assets/texture/unknown.png");
             } else return image;
         });
-    }
-    /// Returns the texture at the given path in the assets folder, with an outline applied dynamically
-    public static Image textureOutlined(String path) {
-        String key = "/assets/" + path + " OUTLINE";
-        if (TEXTURES.containsKey(key)) return TEXTURES.get(key);
-
-        var origImage = (BufferedImage) texture(path);
-        var firstImage = copy(origImage);
-        apply1PixelOutline(firstImage, origImage, Color.WHITE);
-        var outlinedImage = copy(firstImage);
-        apply1PixelOutline(outlinedImage, firstImage, Color.BLACK);
-
-        TEXTURES.put(key, outlinedImage);
-        return outlinedImage;
-    }
-    /// Applies a one pixel outline with the given color and stores it into the output parameter image
-    private static void apply1PixelOutline(BufferedImage image, BufferedImage origImage, Color color) {
-        int w = image.getWidth(null);
-        int h = image.getHeight(null);
-        int outlineColor = color.getRGB();
-        for (int x = 0; x < w; x ++) {
-            for (int y = 0; y < h; y ++) {
-                if (isTranslucent(origImage, x, y)) {
-                    if (!isTranslucent(origImage, x-1, y) ||
-                            !isTranslucent(origImage, x, y-1) ||
-                            !isTranslucent(origImage, x+1, y) ||
-                            !isTranslucent(origImage, x, y+1)) {
-                        image.setRGB(x, y, outlineColor);
-                    }
-                }
-            }
-        }
-    }
-    /// Returns false if the pixel at the given position in the image is opaque, and true otherwise
-    private static boolean isTranslucent(BufferedImage img, int x, int y) {
-        if (x < 0 || x >= img.getWidth() || y < 0 || y >= img.getHeight()) return true;
-        int pixel = img.getRGB(x, y);
-        // alpha is stored in the 8 bits at the far left
-        int alpha = (pixel >> 24) & 0xff;
-        return alpha < 255;
     }
 
     /// Returns the default font
@@ -104,7 +64,7 @@ public class Assets {
     /// Returns sound at the given path in the assets folder with the given change in pitch
     public static Sound sound(String path, float deltaPitchInSemitones) {
         String fullPath = "/assets/sound/" + path + ".wav";
-        return SOUNDS.computeIfAbsent(fullPath + " with delta pitch: " + deltaPitchInSemitones, _ -> {
+        return SOUNDS.computeIfAbsent(fullPath + " with delta pitch: " + deltaPitchInSemitones, ignored -> {
             try (var in = new BufferedInputStream(Main.getResource(fullPath))) {
                 return new Sound(in, deltaPitchInSemitones);
             } catch (IOException e) {

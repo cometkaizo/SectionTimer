@@ -13,7 +13,7 @@ public final class Main {
     private Main() {
     }
 
-    static void main() {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             useSystemLookAndFeel();
             Theme.install();

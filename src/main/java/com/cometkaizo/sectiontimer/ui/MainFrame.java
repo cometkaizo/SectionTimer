@@ -90,6 +90,7 @@ public final class MainFrame extends JFrame {
             switchProfile(event.getPreciseWheelRotation() > 0 ? 1 : -1);
         });
         setContentPane(normalContent);
+        setIconImage(Assets.texture("icon"));
 
         installActions();
         installWindowListener();
@@ -450,10 +451,10 @@ public final class MainFrame extends JFrame {
         if (state.profile() == null) {
             setTitle("Drawing Timer");
         } else if (state.complete()) {
-            setTitle(state.profile().getName() + " — Complete");
+            setTitle(state.profile().getName() + " - Complete");
         } else {
             String status = state.running() ? "Running" : "Paused";
-            setTitle(state.profile().getName() + " — " + status);
+            setTitle(state.profile().getName() + " - " + status);
         }
     }
 
