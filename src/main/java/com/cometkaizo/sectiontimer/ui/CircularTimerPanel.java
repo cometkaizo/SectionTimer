@@ -42,17 +42,22 @@ public final class CircularTimerPanel extends JPanel {
 
         addMouseListener(new MouseAdapter() {
             @Override public void mousePressed(MouseEvent event) {
+                Assets.sound("click_down").play();
                 if (event.getButton() == MouseEvent.BUTTON1 && containsCircle(event.getX(), event.getY())) {
                     targetPressScale = 0.955;
-                    Assets.sound("click_down").play();
                     startAnimation();
                 }
             }
             @Override public void mouseReleased(MouseEvent event) {
+                Assets.sound("click_up").play();
                 if (event.getButton() == MouseEvent.BUTTON1) {
                     targetPressScale = 1.0;
-                    Assets.sound("click_up").play();
                     startAnimation();
+                } else if (event.getButton() == MouseEvent.BUTTON3
+                        && !compactMode
+                        && containsCircle(event.getX(), event.getY())
+                        && editAction != null) {
+                    editAction.run();
                 }
             }
             @Override public void mouseExited(MouseEvent event) {
@@ -64,14 +69,6 @@ public final class CircularTimerPanel extends JPanel {
                 if (compactMode) {
                     targetTotalTimeOpacity = 1.0;
                     startAnimation();
-                }
-            }
-            @Override public void mouseClicked(MouseEvent event) {
-                if (event.getButton() == MouseEvent.BUTTON3
-                        && !compactMode
-                        && containsCircle(event.getX(), event.getY())
-                        && editAction != null) {
-                    editAction.run();
                 }
             }
         });

@@ -19,6 +19,7 @@ public class RoundedButton extends JButton {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setRolloverEnabled(true);
+        setFocusable(false);
 
         addMouseListener(new MouseAdapter() {
             @Override

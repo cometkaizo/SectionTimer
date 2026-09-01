@@ -78,7 +78,6 @@ public final class MainFrame extends JFrame {
         );
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setMinimumSize(new Dimension(650, 650));
         normalContent = buildNormalContent();
         miniContent = buildMiniContent();
         normalContent.addMouseWheelListener(event -> {
@@ -97,7 +96,8 @@ public final class MainFrame extends JFrame {
         showCurrentProfile();
 
         pack();
-        setSize(Math.max(getWidth(), 650), Math.max(getHeight(), 650));
+        setMinimumSize(new Dimension(530, 530));
+        setSize(530, 530);
         setLocationRelativeTo(null);
     }
 
@@ -218,7 +218,7 @@ public final class MainFrame extends JFrame {
 
         timerPanel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent event) {
+            public void mouseReleased(MouseEvent event) {
                 if (event.getButton() == MouseEvent.BUTTON1) {
                     timerEngine.handleTimerCircleClick();
                 }
@@ -254,7 +254,7 @@ public final class MainFrame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-        JButton miniButton = new RoundedButton("Mini mode");
+        JButton miniButton = new RoundedButton("Mini");
         miniButton.setToolTipText("Move the timer to the bottom-left corner");
         miniButton.addActionListener(event -> enterMiniMode());
 
@@ -312,7 +312,7 @@ public final class MainFrame extends JFrame {
         timerConstraints.fill = GridBagConstraints.BOTH;
         normalTimerArea.add(timerPanel, timerConstraints);
         setContentPane(normalContent);
-        setMinimumSize(new Dimension(650, 650));
+        setMinimumSize(new Dimension(530, 530));
         if (normalBounds != null) setBounds(normalBounds);
         revalidate();
         repaint();
@@ -470,6 +470,7 @@ public final class MainFrame extends JFrame {
         bindKey("SPACE", "toggle", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                Assets.sound("click_down").play();
                 timerEngine.toggleRunning();
             }
         });
